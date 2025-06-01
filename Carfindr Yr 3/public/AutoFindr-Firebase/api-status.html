@@ -1,0 +1,86 @@
+<!-- API Status Indicator (add this to the header section) -->
+<div class="api-status" id="api-status">
+    <div class="status-indicator">
+        <span class="status-dot" id="status-dot"></span>
+        <span class="status-text" id="status-text">Checking APIs...</span>
+    </div>
+</div>
+
+<style>
+.api-status {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    z-index: 1000;
+    background: rgba(255, 255, 255, 0.95);
+    padding: 8px 15px;
+    border-radius: 20px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    font-size: 12px;
+    font-family: 'Rajdhani', sans-serif;
+}
+
+.status-indicator {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #ffa500;
+    animation: pulse 2s infinite;
+}
+
+.status-dot.online {
+    background: #4CAF50;
+    animation: none;
+}
+
+.status-dot.offline {
+    background: #f44336;
+    animation: none;
+}
+
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+}
+
+.status-text {
+    font-weight: 600;
+    color: #333;
+}
+</style>
+
+<script>
+// API Status Checker
+async function checkAPIStatus() {
+    const statusDot = document.getElementById('status-dot');
+    const statusText = document.getElementById('status-text');
+    
+    try {
+        // Test car makes API
+        const response = await fetch('/api/car-makes');
+        if (response.ok) {
+            statusDot.className = 'status-dot online';
+            statusText.textContent = 'APIs Online';
+        } else {
+            throw new Error('API Error');
+        }
+    } catch (error) {
+        statusDot.className = 'status-dot offline';
+        statusText.textContent = 'APIs Offline';
+        console.error('API Status Check Failed:', error);
+    }
+}
+
+// Check API status on page load and every 5 minutes
+document.addEventListener('DOMContentLoaded', function() {
+    checkAPIStatus();
+    setInterval(checkAPIStatus, 300000); // 5 minutes
+});
+</script>

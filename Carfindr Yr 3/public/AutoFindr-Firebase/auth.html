@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Car Findr - Elite Car Series</title>
+  <link rel="stylesheet" href="css/auth.css" />
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+</head>
+<body>
+  <div class="overlay"></div>
+  <div class="container">
+    <h1>Car Findr</h1>
+    <h2>Elite Car Series Login</h2>
+    <form>
+      <input type="text" placeholder="Username" required />
+      <input type="password" placeholder="Password" required />
+      <button type="submit">Login</button>
+    </form>
+
+    <a href="register.html">Don't have an account? Register</a>
+
+    <!-- Google Sign-In Button -->
+    <div id="g_id_onload"
+         data-client_id="429886434467-uo6ubekj4qj2ou7v1aokrjdtm91u7631.apps.googleusercontent.com"
+         data-context="signin"
+         data-ux_mode="popup"
+         data-callback="handleCredentialResponse"
+         data-auto_prompt="false">
+    </div>
+
+    <div class="g_id_signin"
+         data-type="standard"
+         data-shape="rectangular"
+         data-theme="outline"
+         data-text="sign_in_with"
+         data-size="large"
+         data-logo_alignment="left">
+    </div>
+  </div>
+
+  <div class="footer">
+    &copy; 2025 Car Findr. All rights reserved.
+  </div>
+
+  <!-- Handle Google Sign-In -->
+  <script>
+    function handleCredentialResponse(response) {
+      // Decode JWT response to get user details (you can use jwt-decode library for this)
+      console.log("Encoded JWT ID token: " + response.credential);
+      // For demonstration, alert the token
+      alert("Google Sign-In Successful! Token:\n" + response.credential);
+      // You can send this token to your backend to verify/login the user
+    }
+  </script>
+</body>
+</html>

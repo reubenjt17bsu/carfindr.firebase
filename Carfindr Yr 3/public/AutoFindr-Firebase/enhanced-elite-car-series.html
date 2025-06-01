@@ -1,0 +1,2427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elite Car Series</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+  firebase.auth().onAuthStateChanged((user) => {
+    if (!user) {
+      window.location.href = "login.html"; // Block unauthenticated access
+    }
+  });
+</script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #dc2626, #1f2937);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header Styles */
+        .header {
+            background: linear-gradient(135deg, #bc0000 0%, #000000d4 100%);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 20px 0;
+        }
+
+        .logo {
+            font-family: 'Orbitron', monospace;
+            font-size: 2rem;
+            font-weight: 900;
+            color: #000000;
+            text-align: center;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+        }
+
+        /* Search Box */
+        .search-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .search-box {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 15px 50px 15px 20px;
+            border: 2px solid #a24b4b;
+            border-radius: 50px;
+            font-size: 16px;
+            font-family: 'Rajdhani', sans-serif;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            border-color: #ea6666;
+            box-shadow: 0 0 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .search-btn {
+            position: absolute;
+            right: 5px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: linear-gradient(45deg, #dc2626, #1f2937);
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+            color: rgb(255, 155, 155);
+            font-size: 18px;
+            transition: all 0.3s ease;
+        }
+
+        .search-btn:hover {
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        /* Navigation */
+        .nav {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .nav-item {
+            background: linear-gradient(45deg, #000000, #ff0000e4);
+            color: white;
+            text-decoration: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            font-weight: 600;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, #ff1d1d, #0b0f21);
+            transition: left 0.3s ease;
+            z-index: -1;
+        }
+
+        .nav-item:hover::before {
+            left: 0;
+        }
+
+        .nav-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-top: 200px;
+            padding: 40px 0;
+        }
+
+        .section {
+            background: rgb(255, 215, 215);
+            margin: 30px 0;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section h2 {
+            font-family: 'Orbitron', monospace;
+            font-size: 2.5rem;
+            color: #b33232;
+            margin-bottom: 30px;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: 60px 0;
+        }
+
+        .hero-image {
+            width: 100%;
+            max-width: 800px;
+            height: 400px;
+            object-fit: cover;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            margin: 30px 0;
+            transition: transform 0.3s ease;
+        }
+
+        .hero-image:hover {
+            transform: scale(1.02);
+        }
+
+        .hero-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 3.5rem;
+            font-weight: 900;
+            background: linear-gradient(45deg, #3a3a3a, #d00000);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+        }
+
+        .hero-subtitle {
+            font-size: 1.5rem;
+            color: #000000;
+            margin-bottom: 30px;
+            font-weight: 300;
+        }
+
+        /* Content Sections */
+        .content-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin: 30px 0;
+        }
+
+        .card {
+            background: linear-gradient(135deg, #fef2f2 0%, #ff8d8d 100%);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card h3 {
+            font-family: 'Orbitron', monospace;
+            color: #000000;
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
+
+        .spec-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .spec-list li {
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            font-weight: 500;
+        }
+
+        .spec-list li:last-child {
+            border-bottom: none;
+        }
+
+        .model-card {
+            text-align: center;
+            padding: 20px;
+        }
+
+        .model-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+
+        .year-timeline {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .year-item {
+            background: linear-gradient(45deg, #fd3131, #000000);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            min-width: 150px;
+            transition: transform 0.3s ease;
+        }
+
+        .year-item:hover {
+            transform: scale(1.05);
+        }
+
+        .contact-form {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #b94343;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #950000;
+        }
+
+        .submit-btn {
+            background: linear-gradient(45deg, #ff0000, #000000);
+            color: white;
+            padding: 15px 40px;
+            border: none;
+            border-radius: 25px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Mobile Menu */
+        .mobile-menu-btn {
+            display: none;
+            background: linear-gradient(45deg, #ff0000, #000000);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 18px;
+            margin: 10px auto;
+        }
+
+        /* Gallery Styles */
+        .gallery-filters {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 40px;
+        }
+
+        .filter-btn {
+            background: transparent;
+            border: 2px solid #c40000;
+            color: #000000;
+            padding: 12px 25px;
+            border-radius: 25px;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-family: 'Rajdhani', sans-serif;
+        }
+
+        .filter-btn:hover,
+        .filter-btn.active {
+            background: linear-gradient(45deg, #ff2222, #000000);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin: 30px 0;
+        }
+
+        .gallery-item {
+            position: relative;
+            border-radius: 15px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgb(255, 255, 255);
+        }
+
+        .gallery-item:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .gallery-image {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .gallery-item:hover .gallery-image {
+            transform: scale(1.1);
+        }
+
+        .gallery-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+            color: white;
+            padding: 30px 20px 20px;
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+        }
+
+        .gallery-item:hover .gallery-overlay {
+            transform: translateY(0);
+        }
+
+        .gallery-overlay h3 {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.2rem;
+            margin-bottom: 5px;
+            color: white;
+        }
+
+        .gallery-overlay p {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        /* Lightbox Styles */
+        .lightbox {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(10px);
+        }
+
+        .lightbox-content {
+            position: relative;
+            margin: auto;
+            padding: 20px;
+            width: 90%;
+            max-width: 1200px;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .lightbox-img {
+            max-width: 100%;
+            max-height: 70vh;
+            object-fit: contain;
+            border-radius: 10px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: 20px;
+            right: 35px;
+            color: white;
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .lightbox-close:hover {
+            color: #6b85f653;
+        }
+
+        .lightbox-prev,
+        .lightbox-next {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: none;
+            font-size: 24px;
+            padding: 15px 20px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .lightbox-prev:hover,
+        .lightbox-next:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .lightbox-prev {
+            left: 20px;
+        }
+
+        .lightbox-next {
+            right: 20px;
+        }
+
+        .lightbox-caption {
+            text-align: center;
+            color: white;
+            margin-top: 20px;
+            max-width: 600px;
+        }
+
+        .lightbox-caption h3 {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            color: #0e0068;
+        }
+
+        .lightbox-caption p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        /* Gallery Filter Animation */
+        .gallery-item.hidden {
+            display: none;
+        }
+
+        .gallery-item.show {
+            display: block;
+            animation: fadeInUp 0.5s ease-in-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Test Drive Styles */
+        .test-drive-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .test-drive-card {
+            background: linear-gradient(135deg, #fef2f2 0%, #fecaca 100%);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .test-drive-card:hover {
+            border-color: #dc2626;
+            transform: translateY(-5px);
+        }
+
+        .test-drive-header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .test-drive-header h3 {
+            color: #1f2937;
+            margin-bottom: 10px;
+            font-size: 1.5rem;
+        }
+
+        .test-drive-header p {
+            color: #666;
+            font-size: 1rem;
+        }
+
+        .elite-models-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .elite-model-option {
+            background: white;
+            padding: 15px;
+            border-radius: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .elite-model-option:hover {
+            border-color: #dc2626;
+            transform: scale(1.02);
+        }
+
+        .elite-model-option img {
+            width: 100%;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
+
+        .elite-model-option h4 {
+            color: #1f2937;
+            margin: 10px 0 5px;
+            font-size: 1rem;
+        }
+
+        .elite-model-option p {
+            color: #666;
+            font-size: 0.85rem;
+            margin: 0;
+        }
+
+        .test-drive-booking {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            border: 2px solid #dc2626;
+            margin-top: 30px;
+            display: none;
+        }
+
+        .booking-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .selected-car-display {
+            background: linear-gradient(45deg, #dc2626, #1f2937);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 15px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .checkbox-group {
+            margin: 20px 0;
+        }
+
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+
+        .cancel-btn {
+            background: #6b7280;
+        }
+
+        .submit-test-drive-btn {
+            background: linear-gradient(45deg, #dc2626, #1f2937);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        /* Enhanced Chatbot Styles */
+        .chatbot-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1500;
+        }
+
+        .chatbot-toggle {
+            background: linear-gradient(45deg, #dc2626, #1f2937);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 8px 25px rgba(220, 38, 38, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+            border: none;
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 600;
+        }
+
+        .chatbot-toggle:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 35px rgba(220, 38, 38, 0.4);
+        }
+
+        .chatbot-icon {
+            font-size: 1.2rem;
+        }
+
+        .chatbot-text {
+            font-size: 1rem;
+            white-space: nowrap;
+        }
+
+        .chatbot-window {
+            position: absolute;
+            bottom: 80px;
+            right: 0;
+            width: 400px;
+            height: 600px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+            border: 2px solid #dc2626;
+        }
+
+        .chatbot-window.open {
+            display: flex;
+            animation: slideUp 0.3s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .chatbot-header {
+            background: linear-gradient(45deg, #dc2626, #1f2937);
+            color: white;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .chatbot-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .bot-avatar {
+            font-size: 1.5rem;
+        }
+
+        .chatbot-title h4 {
+            margin: 0;
+            font-size: 1.1rem;
+            font-family: 'Orbitron', monospace;
+        }
+
+        .chatbot-title p {
+            margin: 0;
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .chatbot-close {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 50%;
+            transition: background 0.3s ease;
+        }
+
+        .chatbot-close:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .chatbot-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            background: #f8fafc;
+        }
+
+        .message {
+            max-width: 80%;
+            padding: 12px 16px;
+            border-radius: 18px;
+            font-size: 14px;
+            line-height: 1.4;
+            animation: fadeInMessage 0.3s ease-out;
+        }
+
+        @keyframes fadeInMessage {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message.user {
+            background: linear-gradient(45deg, #dc2626, #1f2937);
+            color: white;
+            align-self: flex-end;
+            margin-left: auto;
+        }
+
+        .message.bot {
+            background: white;
+            color: #333;
+            align-self: flex-start;
+            border: 1px solid #e1e5e9;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .message.typing {
+            background: #f0f2f5;
+            color: #666;
+            align-self: flex-start;
+            border: 1px solid #e1e5e9;
+        }
+
+        .typing-indicator {
+            display: flex;
+            gap: 4px;
+            align-items: center;
+        }
+
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #dc2626;
+            animation: typingAnimation 1.4s infinite ease-in-out;
+        }
+
+        .typing-dot:nth-child(1) { animation-delay: -0.32s; }
+        .typing-dot:nth-child(2) { animation-delay: -0.16s; }
+
+        @keyframes typingAnimation {
+            0%, 80%, 100% {
+                transform: scale(0);
+                opacity: 0.5;
+            }
+            40% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .quick-questions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            padding: 15px 20px 10px;
+            background: white;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .quick-question-btn {
+            background: #f3f4f6;
+            color: #374151;
+            border: 1px solid #d1d5db;
+            padding: 6px 12px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Rajdhani', sans-serif;
+        }
+
+        .quick-question-btn:hover {
+            background: #dc2626;
+            color: white;
+            border-color: #dc2626;
+        }
+
+        .chatbot-input-container {
+            padding: 20px;
+            border-top: 1px solid #e1e5e9;
+            display: flex;
+            gap: 10px;
+            background: white;
+        }
+
+        .chatbot-input {
+            flex: 1;
+            padding: 12px 16px;
+            border: 2px solid #e1e5e9;
+            border-radius: 25px;
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+
+        .chatbot-input:focus {
+            border-color: #dc2626;
+        }
+
+        .chatbot-send {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #dc2626, #1f2937);
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .chatbot-send:hover:not(:disabled) {
+            transform: scale(1.1);
+        }
+
+        .chatbot-send:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Welcome message styles */
+        .welcome-message {
+            background: linear-gradient(135deg, #f0f2f5, #e1e5e9);
+            border: 2px solid #1c354b;
+            border-radius: 15px;
+            padding: 15px;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .welcome-message h4 {
+            color: #003aad;
+            font-family: 'Orbitron', monospace;
+            margin-bottom: 8px;
+            font-size: 1rem;
+        }
+
+        .welcome-message p {
+            color: #666;
+            font-size: 13px;
+            line-height: 1.3;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .logo {
+                font-size: 1.5rem;
+                letter-spacing: 2px;
+            }
+
+            .nav {
+                display: none;
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .nav.active {
+                display: flex;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .nav-item {
+                margin: 5px 0;
+                text-align: center;
+            }
+
+            .hero-title {
+                font-size: 2.5rem;
+                letter-spacing: 2px;
+            }
+
+            .hero-subtitle {
+                font-size: 1.2rem;
+            }
+
+            .section h2 {
+                font-size: 2rem;
+            }
+
+            .section {
+                padding: 20px;
+                margin: 20px 0;
+            }
+
+            .main-content {
+                margin-top: 250px;
+            }
+
+            .content-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .year-timeline {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .chatbot-window {
+                width: 350px;
+                height: 500px;
+                right: -10px;
+            }
+
+            .chatbot-container {
+                bottom: 15px;
+                right: 15px;
+            }
+
+            .chatbot-toggle {
+                padding: 12px 16px;
+            }
+
+            .chatbot-text {
+                display: none;
+            }
+
+            .gallery-grid {
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+                gap: 20px;
+            }
+            
+            .gallery-filters {
+                gap: 10px;
+            }
+            
+            .filter-btn {
+                padding: 10px 20px;
+                font-size: 14px;
+            }
+            
+            .lightbox-prev,
+            .lightbox-next {
+                font-size: 20px;
+                padding: 12px 15px;
+            }
+            
+            .lightbox-close {
+                font-size: 30px;
+                right: 20px;
+            }
+            
+            .lightbox-caption h3 {
+                font-size: 1.2rem;
+            }
+            
+            .lightbox-caption p {
+                font-size: 1rem;
+            }
+
+            .test-drive-options {
+                grid-template-columns: 1fr;
+            }
+            
+            .elite-models-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 0 10px;
+            }
+
+            .hero-title {
+                font-size: 2rem;
+            }
+
+            .section {
+                padding: 15px;
+            }
+
+            .card {
+                padding: 20px;
+            }
+
+            .chatbot-window {
+                width: 320px;
+                height: 450px;
+                right: -20px;
+            }
+
+            .gallery-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .gallery-filters {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .filter-btn {
+                width: 200px;
+            }
+            
+            .lightbox-content {
+                padding: 10px;
+            }
+            
+            .lightbox-img {
+                max-height: 60vh;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="logo">Elite Car Series</div>
+            
+            <div class="search-container">
+                <div class="search-box">
+                    <input type="text" class="search-input" placeholder="Search cars, models, specifications...">
+                    <button class="search-btn">🔍</button>
+                </div>
+            </div>
+
+            <button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰ Menu</button>
+            
+            <nav class="nav" id="navigation">
+                <a href="#" class="nav-item" onclick="showSection('home')">Home</a>
+                <a href="#" class="nav-item" onclick="showSection('about')">About</a>
+                <a href="#" class="nav-item" onclick="showSection('specifications')">Specifications</a>
+                <a href="#" class="nav-item" onclick="showSection('models')">Models</a>
+                <a href="#" class="nav-item" onclick="showSection('test-drive')">Test Drive</a>
+                <a href="#" class="nav-item" onclick="showSection('gallery')">Gallery</a>
+                <a href="#" class="nav-item" onclick="showSection('years')">Years</a>
+                <a href="#" class="nav-item" onclick="showSection('contact')">Contact</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="container">
+            <!-- Home Section -->
+            <section id="home" class="section active">
+                <div class="hero">
+                    <h1 class="hero-title">Elite Car Series</h1>
+                    <p class="hero-subtitle">Experience the pinnacle of automotive excellence</p>
+                    <img src="https://c4.wallpaperflare.com/wallpaper/323/372/925/lamborghini-car-lamborghini-aventador-vehicle-wallpaper-preview.jpg" alt="Elite Car Series Hero Image" class="hero-image">
+                    <p>Discover the perfect blend of luxury, performance, and innovation. Our Elite Car Series represents decades of automotive engineering excellence, designed for those who demand nothing but the best.</p>
+                </div>
+            </section>
+
+            <!-- About Section -->
+            <section id="about" class="section">
+                <h2>About Elite Car Series</h2>
+                <div class="content-grid">
+                    <div class="card">
+                        <h3>Our Heritage</h3>
+                        <p>Founded with a vision to create the ultimate driving experience, Elite Car Series has been at the forefront of automotive innovation for over three decades. Our commitment to excellence drives every aspect of our design and manufacturing process.</p>
+                    </div>
+                    <div class="card">
+                        <h3>Innovation</h3>
+                        <p>We continuously push the boundaries of what's possible in automotive technology. From advanced hybrid powertrains to cutting-edge safety systems, every Elite vehicle represents the latest in automotive innovation.</p>
+                    </div>
+                    <div class="card">
+                        <h3>Craftsmanship</h3>
+                        <p>Each Elite vehicle is meticulously crafted by skilled artisans who take pride in their work. From hand-stitched leather interiors to precision-engineered components, quality is evident in every detail.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Specifications Section -->
+            <section id="specifications" class="section">
+                <h2>Technical Specifications</h2>
+                <div class="content-grid">
+                    <div class="card">
+                        <h3>Engine Performance</h3>
+                        <ul class="spec-list">
+                            <li><span>Engine Type</span><span>V8 Twin-Turbo</span></li>
+                            <li><span>Horsepower</span><span>650 HP</span></li>
+                            <li><span>Torque</span><span>750 lb-ft</span></li>
+                            <li><span>0-60 mph</span><span>3.2 seconds</span></li>
+                            <li><span>Top Speed</span><span>205 mph</span></li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h3>Dimensions & Weight</h3>
+                        <ul class="spec-list">
+                            <li><span>Length</span><span>195.5 inches</span></li>
+                            <li><span>Width</span><span>76.8 inches</span></li>
+                            <li><span>Height</span><span>54.2 inches</span></li>
+                            <li><span>Wheelbase</span><span>115.7 inches</span></li>
+                            <li><span>Curb Weight</span><span>3,850 lbs</span></li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h3>Technology Features</h3>
+                        <ul class="spec-list">
+                            <li><span>Infotainment</span><span>12.3" Touchscreen</span></li>
+                            <li><span>Sound System</span><span>Premium 15-Speaker</span></li>
+                            <li><span>Driver Assistance</span><span>Level 2 Autonomous</span></li>
+                            <li><span>Connectivity</span><span>5G & WiFi Hotspot</span></li>
+                            <li><span>Navigation</span><span>Real-time Traffic</span></li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Models Section -->
+            <section id="models" class="section">
+                <h2>Our Model Lineup</h2>
+                <div class="content-grid">
+                    <div class="card model-card">
+                        <img src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" alt="Elite GT" class="model-image">
+                        <h3>Elite GT</h3>
+                        <p>The flagship grand tourer combining luxury and performance in perfect harmony.</p>
+                    </div>
+                    <div class="card model-card">
+                        <img src="https://images.unsplash.com/photo-1544636331-e26879cd4d9b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80" alt="Elite Sport" class="model-image">
+                        <h3>Elite Sport</h3>
+                        <p>Pure performance focused design for the ultimate driving enthusiast.</p>
+                    </div>
+                    <div class="card model-card">
+                        <img src="https://images.pexels.com/photos/3764984/pexels-photo-3764984.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Elite Luxury" class="model-image">
+                        <h3>Elite Luxury</h3>
+                        <p>Uncompromising luxury and comfort for the discerning driver.</p>
+                    </div>
+                    <div class="card model-card">
+                        <img src="https://static1.topspeedimages.com/wordpress/wp-content/uploads/2024/02/toyota-crown-comparison-2-1.jpg?q=50&fit=crop&w=1140&h=&dpr=1.5" alt="Elite Hybrid" class="model-image">
+                        <h3>Elite Hybrid</h3>
+                        <p>Sustainable performance with our advanced hybrid technology.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Test Drive Section -->
+            <section id="test-drive" class="section">
+                <h2>Book a Test Drive</h2>
+                <p style="text-align: center; margin-bottom: 30px; color: #666;">
+                    Experience the thrill firsthand. Schedule your test drive today and feel the power, luxury, and innovation of our vehicles.
+                </p>
+                
+                <!-- Test Drive Options -->
+                <div class="test-drive-options">
+                    <div class="test-drive-card elite-cars">
+                        <div class="test-drive-header">
+                            <h3>🏆 Elite Car Series</h3>
+                            <p>Experience our luxury flagship models</p>
+                        </div>
+                        <div class="elite-models-grid">
+                            <div class="elite-model-option" onclick="selectEliteModel('Elite GT')">
+                                <img src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80" alt="Elite GT">
+                                <h4>Elite GT</h4>
+                                <p>V8 Twin-Turbo • 650 HP</p>
+                            </div>
+                            <div class="elite-model-option" onclick="selectEliteModel('Elite Sport')">
+                                <img src="https://images.unsplash.com/photo-1544636331-e26879cd4d9b?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80" alt="Elite Sport">
+                                <h4>Elite Sport</h4>
+                                <p>Racing Performance • 0-60 in 2.3s</p>
+                            </div>
+                            <div class="elite-model-option" onclick="selectEliteModel('Elite Luxury')">
+                                <img src="https://images.pexels.com/photos/3764984/pexels-photo-3764984.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Elite Luxury">
+                                <h4>Elite Luxury</h4>
+                                <p>Premium Comfort • Executive Class</p>
+                            </div>
+                            <div class="elite-model-option" onclick="selectEliteModel('Elite Hybrid')">
+                                <img src="https://static1.topspeedimages.com/wordpress/wp-content/uploads/2024/02/toyota-crown-comparison-2-1.jpg?q=50&fit=crop&w=1140&h=&dpr=1.5" alt="Elite Hybrid">
+                                <h4>Elite Hybrid</h4>
+                                <p>Eco Performance • Sustainable Luxury</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Booking Form -->
+                <div id="test-drive-booking-form" class="test-drive-booking">
+                    <div class="booking-header">
+                        <h3>📅 Schedule Your Test Drive</h3>
+                        <div class="selected-car-info" id="selected-car-info"></div>
+                    </div>
+                    
+                    <form id="test-drive-form" onsubmit="submitTestDrive(event)">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="customer-name">Full Name *</label>
+                                <input type="text" id="customer-name" name="customerName" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="customer-email">Email Address *</label>
+                                <input type="email" id="customer-email" name="customerEmail" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="customer-phone">Phone Number *</label>
+                                <input type="tel" id="customer-phone" name="customerPhone" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="customer-license">Driver's License Number *</label>
+                                <input type="text" id="customer-license" name="customerLicense" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="test-drive-date">Preferred Date *</label>
+                                <input type="date" id="test-drive-date" name="testDriveDate" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="test-drive-time">Preferred Time *</label>
+                                <select id="test-drive-time" name="testDriveTime" required style="width: 100%; padding: 15px; border: 2px solid #ddd; border-radius: 10px; font-family: 'Rajdhani', sans-serif; font-size: 16px;">
+                                    <option value="">Select Time</option>
+                                    <option value="09:00">9:00 AM</option>
+                                    <option value="10:00">10:00 AM</option>
+                                    <option value="11:00">11:00 AM</option>
+                                    <option value="12:00">12:00 PM</option>
+                                    <option value="13:00">1:00 PM</option>
+                                    <option value="14:00">2:00 PM</option>
+                                    <option value="15:00">3:00 PM</option>
+                                    <option value="16:00">4:00 PM</option>
+                                    <option value="17:00">5:00 PM</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="dealership-location">Preferred Dealership Location *</label>
+                            <select id="dealership-location" name="dealershipLocation" required style="width: 100%; padding: 15px; border: 2px solid #ddd; border-radius: 10px; font-family: 'Rajdhani', sans-serif; font-size: 16px;">
+                                <option value="">Select Location</option>
+                                <option value="downtown">Downtown Showroom</option>
+                                <option value="north">North Side Location</option>
+                                <option value="south">South Side Location</option>
+                                <option value="east">East Side Location</option>
+                                <option value="west">West Side Location</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="special-requests">Special Requests or Notes</label>
+                            <textarea id="special-requests" name="specialRequests" rows="3" placeholder="Any specific features you'd like to test, accessibility needs, or other requests..."></textarea>
+                        </div>
+                        
+                        <div class="form-group checkbox-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="terms-agreement" name="termsAgreement" required>
+                                <span class="checkmark"></span>
+                                I agree to the Terms and Conditions and confirm I have a valid driver's license
+                            </label>
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button type="button" onclick="cancelTestDrive()" class="cancel-btn submit-btn">Cancel</button>
+                            <button type="submit" class="submit-test-drive-btn submit-btn">Book Test Drive</button>
+                        </div>
+                    </form>
+                </div>
+                
+                <!-- Confirmation Modal -->
+                <div id="test-drive-confirmation" class="modal">
+                    <div class="modal-content">
+                        <div class="confirmation-header">
+                            <h3>✅ Test Drive Booked Successfully!</h3>
+                        </div>
+                        <div class="confirmation-details" id="confirmation-details"></div>
+                        <div class="confirmation-actions">
+                            <button onclick="closeConfirmation()" class="submit-btn">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Gallery Section -->
+            <section id="gallery" class="section">
+                <h2>Photo Gallery</h2>
+                
+                <!-- Gallery Filter Buttons -->
+                <div class="gallery-filters">
+                    <button class="filter-btn active" onclick="filterGallery('all')">All Photos</button>
+                    <button class="filter-btn" onclick="filterGallery('exterior')">Exterior</button>
+                    <button class="filter-btn" onclick="filterGallery('interior')">Interior</button>
+                    <button class="filter-btn" onclick="filterGallery('engine')">Engine</button>
+                    <button class="filter-btn" onclick="filterGallery('details')">Details</button>
+                </div>
+                
+                <!-- Gallery Grid -->
+                <div class="gallery-grid">
+                    <!-- Exterior Photos -->
+                    <div class="gallery-item" data-category="exterior" onclick="openLightbox(0)">
+                        <img src="https://images.pexels.com/photos/112460/pexels-photo-112460.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" alt="Elite GT Front View" class="gallery-image">
+                        <div class="gallery-overlay">
+                            <h3>Elite GT Front View</h3>
+                            <p>Aggressive styling meets elegance</p>
+                        </div>
+                    </div>
+                    
+                    <div class="gallery-item" data-category="exterior" onclick="openLightbox(1)">
+                        <img src="https://images.pexels.com/photos/2127733/pexels-photo-2127733.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" alt="Elite Sport Side Profile" class="gallery-image">
+                        <div class="gallery-overlay">
+                            <h3>Elite Sport Side Profile</h3>
+                            <p>Aerodynamic perfection</p>
+                        </div>
+                    </div>
+                    
+                    <div class="gallery-item" data-category="exterior" onclick="openLightbox(2)">
+                        <img src="https://hips.hearstapps.com/hmg-prod/images/2022-rolls-royce-ghost-black-badge-104-1635439026.jpg" alt="Elite Luxury Rear View" class="gallery-image">
+                        <div class="gallery-overlay">
+                            <h3>Elite Luxury Rear View</h3>
+                            <p>Sophisticated design language</p>
+                        </div>
+                    </div>
+                    
+                    <div class="gallery-item" data-category="exterior" onclick="openLightbox(3)">
+                        <img src="https://www.koonstoyotaannapolis.com/blogs/3858/wp-content/uploads/2024/01/2024-toyota-camry-hybrid.jpg" alt="Elite Hybrid Night Shot" class="gallery-image">
+                        <div class="gallery-overlay">
+                            <h3>Elite Hybrid Night Shot</h3>
+                            <p>LED lighting technology</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Interior Photos -->
+                    <div class="gallery-item" data-category="interior" onclick="openLightbox(4)">
+                        <img src="https://images.pexels.com/photos/3778769/pexels-photo-3778769.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" alt="Luxury Interior Dashboard" class="gallery-image">
+                        <div class="gallery-overlay">
+                            <h3>Luxury Interior Dashboard</h3>
+                            <p>Premium materials and craftsmanship</p>
+                        </div>
+                    </div>
+                    
+                    <div class="gallery-item" data-category="interior" onclick="openLightbox(5)">
+                        <img src="https://cdn.recaro-automotive.com/fileadmin/01-products/oem/mercedes-benz/amg-gla-45-yne-2017/mercedes-gla-45-yellow-night-2017-03-960x640.jpg?v=1603970886" alt="Sport Seats" class="gallery-image">
+                        <div class="gallery-overlay">
+                            <h3>Sport Seats</h3>
+                            <p>Racing-inspired comfort</p>
+                        </div>
+                    </div>
+                    
+                    <div class="gallery-item" data-category="interior" onclick="openLightbox(6)">
+                        <img src="https://www.evanshalshaw.com/-/media/evanshalshaw/blog/what-is-a-car-infotainment-system/infotainment-system-1920x774px.ashx" alt="Infotainment System" class="gallery-image">
+                        <div class="gallery-overlay">
+                            <h3>Infotainment System</h3>
+                            <p>Advanced connectivity features</p>
+                        </div>
+                    </div>
+                    
+                    <div class="gallery-item" data-category="interior" onclick="openLightbox(7)">
+                        <img src="https://images.pexels.com/photos/14667493/pexels-photo-14667493.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" alt="Rear Passenger Area" class="gallery-image">
+                        <div class="gallery-overlay">
+                            <h3>Rear Passenger Area</h3>
+                            <p>Executive-class comfort</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Engine Photos -->
+                    <div class="gallery-item" data-category="engine" onclick="openLightbox(8)">
+                        <img src="https://c4.wallpaperflare.com/wallpaper/67/102/485/engine-bmw-motor-2018-biturbo-hd-wallpaper-preview.jpg" alt="V8 Twin-Turbo Engine" class="gallery-image">
+                        <div class="gallery-overlay">
+                            <h3>V8 Twin-Turbo Engine</h3>
+                            <p>650 HP of pure power</p>
+                        </div>
+                    </div>
+                    
+                    <div class="gallery-item" data-category="engine" onclick="openLightbox(9)">
+                        <img src="https://media.sciencephoto.com/image/c0360888/800wm/C0360888-Hybrid_car_powertrain.jpg" alt="Hybrid Powertrain" class="gallery-image">
+                        <div class="gallery-overlay">
+                            <h3>Hybrid Powertrain</h3>
+                            <p>Sustainable performance technology</p>
+                        </div>
+                    </div>
+                    
+                    <div class="gallery-item" data-category="engine" onclick="openLightbox(10)">
+                        <img src="https://images.pexels.com/photos/11456554/pexels-photo-11456554.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500" alt="Engine Bay Details" class="gallery-image">
+                        <div class="gallery-overlay">
+                            <h3>Engine Bay Details</h3>
+                            <p>Precision engineering</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Detail Photos -->
+                    <div class="gallery-item" data-category="details" onclick="openLightbox(11)">
+                        <img src="https://i.pinimg.com/736x/4e/04/1c/4e041c16b3b1e976a37dc9e61bc5d641.jpg" alt="Wheel Design" class="gallery-image">
+                        <div class="gallery-overlay">
+                            <h3>Wheel Design</h3>
+                            <p>Performance meets aesthetics</p>
+                        </div>
+                    </div>
+                    
+                    <div class="gallery-item" data-category="details" onclick="openLightbox(12)">
+                        <img src="https://a-static.besthdwallpaper.com/it-is-remarkable-with-its-bmw-neon-light-headlights-which-look-perfect-wallpaper-2880x1800-103984_8.jpg" alt="Headlight Technology" class="gallery-image">
+                        <div class="gallery-overlay">
+                            <h3>Headlight Technology</h3>
+                            <p>Adaptive LED matrix lighting</p>
+                        </div>
+                    </div>
+                    
+                    <div class="gallery-item" data-category="details" onclick="openLightbox(13)">
+                        <img src="https://media.istockphoto.com/id/487700790/photo/car-contour-carbon-fibre.jpg?s=612x612&w=0&k=20&c=SoK4KFoj3XqQpE6zQSAZHJj7Jq8sp4qG9BLbWYoguLQ=" alt="Carbon Fiber Details" class="gallery-image">
+                        <div class="gallery-overlay">
+                            <h3>Carbon Fiber Details</h3>
+                            <p>Lightweight performance materials</p>
+                        </div>
+                    </div>
+                    
+                    <div class="gallery-item" data-category="details" onclick="openLightbox(14)">
+                        <img src="https://images.unsplash.com/photo-1619255566224-fca5ef4ca1be?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8Y2FyJTIwZXhoYXVzdHxlbnwwfHwwfHx8MA%3D%3D" alt="Exhaust System" class="gallery-image">
+                        <div class="gallery-overlay">
+                            <h3>Exhaust System</h3>
+                            <p>Performance tuned acoustics</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Lightbox Modal -->
+            <div id="lightbox" class="lightbox">
+                <div class="lightbox-content">
+                    <span class="lightbox-close" onclick="closeLightbox()">&times;</span>
+                    <button class="lightbox-prev" onclick="changeLightboxImage(-1)">&#10094;</button>
+                    <img id="lightbox-image" src="/placeholder.svg" alt="" class="lightbox-img">
+                    <button class="lightbox-next" onclick="changeLightboxImage(1)">&#10095;</button>
+                    <div class="lightbox-caption">
+                        <h3 id="lightbox-title"></h3>
+                        <p id="lightbox-description"></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Years Section -->
+            <section id="years" class="section">
+                <h2>Model Years</h2>
+                <div class="year-timeline">
+                    <div class="year-item">
+                        <h3>2024</h3>
+                        <p>Latest Generation</p>
+                        <p>Advanced AI Integration</p>
+                    </div>
+                    <div class="year-item">
+                        <h3>2023</h3>
+                        <p>Hybrid Technology</p>
+                        <p>Enhanced Safety Features</p>
+                    </div>
+                    <div class="year-item">
+                        <h3>2022</h3>
+                        <p>Performance Upgrade</p>
+                        <p>New Design Language</p>
+                    </div>
+                    <div class="year-item">
+                        <h3>2021</h3>
+                        <p>Digital Transformation</p>
+                        <p>Connected Services</p>
+                    </div>
+                    <div class="year-item">
+                        <h3>2020</h3>
+                        <p>Series Launch</p>
+                        <p>Foundation Models</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Contact Section -->
+            <section id="contact" class="section">
+                <h2>Contact Us</h2>
+                <div class="contact-form">
+                    <form onsubmit="handleSubmit(event)">
+                        <div class="form-group">
+                            <label for="name">Full Name</label>
+                            <input type="text" id="name" name="name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email Address</label>
+                            <input type="email" id="email" name="email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">Phone Number</label>
+                            <input type="tel" id="phone" name="phone">
+                        </div>
+                        <div class="form-group">
+                            <label for="interest">Model Interest</label>
+                            <select id="interest" name="interest" style="width: 100%; padding: 15px; border: 2px solid #ddd; border-radius: 10px; font-family: 'Rajdhani', sans-serif; font-size: 16px;">
+                                <option value="">Select a model</option>
+                                <option value="elite-gt">Elite GT</option>
+                                <option value="elite-sport">Elite Sport</option>
+                                <option value="elite-luxury">Elite Luxury</option>
+                                <option value="elite-hybrid">Elite Hybrid</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="message">Message</label>
+                            <textarea id="message" name="message" rows="5" placeholder="Tell us about your interest in our Elite Car Series..."></textarea>
+                        </div>
+                        <button type="submit" class="submit-btn">Send Message</button>
+                    </form>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Enhanced Chatbot -->
+    <div class="chatbot-container">
+        <div class="chatbot-toggle" onclick="toggleChatbot()">
+            <span class="chatbot-icon">🤖</span>
+            <span class="chatbot-text">Ask About Cars</span>
+        </div>
+        
+        <div class="chatbot-window" id="chatbot-window">
+            <div class="chatbot-header">
+                <div class="chatbot-title">
+                    <span class="bot-avatar">🚗</span>
+                    <div>
+                        <h4>Automotive AI Assistant</h4>
+                        <p>Ask me anything about cars!</p>
+                    </div>
+                </div>
+                <button class="chatbot-close" onclick="toggleChatbot()">×</button>
+            </div>
+            
+            <div class="chatbot-messages" id="chatbot-messages">
+                <div class="welcome-message">
+                    <h4>👋 Welcome to Elite Car Series!</h4>
+                    <p>I'm your automotive AI assistant. I can help you with:</p>
+                    <ul style="text-align: left; margin: 10px 0; padding-left: 20px;">
+                        <li>🏆 Elite Car Series information</li>
+                        <li>🔍 Any car make, model, or specifications</li>
+                        <li>🔧 Maintenance and repair advice</li>
+                        <li>💡 Car buying recommendations</li>
+                        <li>⚡ Electric vehicles and technology</li>
+                        <li>🏁 Performance and racing info</li>
+                        <li>📊 Car comparisons and reviews</li>
+                    </ul>
+                    <p>What would you like to know about cars?</p>
+                </div>
+            </div>
+            
+            <div class="quick-questions">
+                <button class="quick-question-btn" onclick="askQuickQuestion('Tell me about the Elite GT')">Elite GT Info</button>
+                <button class="quick-question-btn" onclick="askQuickQuestion('Compare Tesla Model S vs BMW i7')">Compare EVs</button>
+                <button class="quick-question-btn" onclick="askQuickQuestion('Best family SUVs 2024')">Family SUVs</button>
+                <button class="quick-question-btn" onclick="askQuickQuestion('How to maintain my car engine?')">Maintenance Tips</button>
+            </div>
+            
+            <div class="chatbot-input-container">
+                <input 
+                    type="text" 
+                    class="chatbot-input" 
+                    id="chatbot-input" 
+                    placeholder="Ask about any car, maintenance, buying advice..."
+                    onkeypress="handleChatKeyPress(event)"
+                >
+                <button class="chatbot-send" id="chatbot-send" onclick="sendMessage()">
+                    ➤
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Navigation functionality
+        function showSection(sectionName) {
+            // Hide all sections
+            const sections = document.querySelectorAll('.section');
+            sections.forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Show selected section
+            const targetSection = document.getElementById(sectionName);
+            if (targetSection) {
+                targetSection.classList.add('active');
+            }
+            
+            // Close mobile menu if open
+            const nav = document.getElementById('navigation');
+            nav.classList.remove('active');
+            
+            // Smooth scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Mobile menu toggle
+        function toggleMobileMenu() {
+            const nav = document.getElementById('navigation');
+            nav.classList.toggle('active');
+        }
+
+        // Search functionality
+        document.querySelector('.search-input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                performSearch();
+            }
+        });
+
+        document.querySelector('.search-btn').addEventListener('click', performSearch);
+
+        function performSearch() {
+            const searchTerm = document.querySelector('.search-input').value.toLowerCase();
+            if (searchTerm.trim() === '') return;
+            
+            // Enhanced search logic
+            if (searchTerm.includes('test drive') || searchTerm.includes('book') || searchTerm.includes('schedule')) {
+                showSection('test-drive');
+            } else if (searchTerm.includes('spec') || searchTerm.includes('performance') || searchTerm.includes('engine')) {
+                showSection('specifications');
+            } else if (searchTerm.includes('model') || searchTerm.includes('gt') || searchTerm.includes('sport') || searchTerm.includes('luxury') || searchTerm.includes('hybrid')) {
+                showSection('models');
+            } else if (searchTerm.includes('year') || searchTerm.includes('2024') || searchTerm.includes('2023') || searchTerm.includes('2022')) {
+                showSection('years');
+            } else if (searchTerm.includes('about') || searchTerm.includes('heritage') || searchTerm.includes('innovation')) {
+                showSection('about');
+            } else if (searchTerm.includes('contact') || searchTerm.includes('phone') || searchTerm.includes('email')) {
+                showSection('contact');
+            } else if (searchTerm.includes('gallery') || searchTerm.includes('photo') || searchTerm.includes('image')) {
+                showSection('gallery');
+            } else {
+                // Default to home if no specific match
+                showSection('home');
+            }
+            
+            // Clear search box
+            document.querySelector('.search-input').value = '';
+        }
+
+        // Form submission
+        function handleSubmit(event) {
+            event.preventDefault();
+            
+            // Get form data
+            const formData = new FormData(event.target);
+            const data = Object.fromEntries(formData);
+            
+            // Simple validation
+            if (!data.name || !data.email) {
+                alert('Please fill in all required fields.');
+                return;
+            }
+            
+            // Simulate form submission
+            alert('Thank you for your interest! We will contact you soon.');
+            
+            // Reset form
+            event.target.reset();
+        }
+
+        // Test Drive Functionality
+        let selectedTestDriveCar = null;
+
+        function selectEliteModel(modelName) {
+            selectedTestDriveCar = {
+                type: 'elite',
+                make: 'Elite',
+                model: modelName,
+                year: '2024'
+            };
+            showBookingForm();
+        }
+
+        function showBookingForm() {
+            const bookingForm = document.getElementById('test-drive-booking-form');
+            const selectedCarInfo = document.getElementById('selected-car-info');
+            
+            selectedCarInfo.innerHTML = `
+                <div class="selected-car-display">
+                    <h4>Selected Vehicle:</h4>
+                    <p><strong>${selectedTestDriveCar.year} ${selectedTestDriveCar.make} ${selectedTestDriveCar.model}</strong></p>
+                </div>
+            `;
+            
+            bookingForm.style.display = 'block';
+            bookingForm.scrollIntoView({ behavior: 'smooth' });
+            
+            // Set minimum date to tomorrow
+            const tomorrow = new Date();
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            document.getElementById('test-drive-date').min = tomorrow.toISOString().split('T')[0];
+        }
+
+        function cancelTestDrive() {
+            document.getElementById('test-drive-booking-form').style.display = 'none';
+            selectedTestDriveCar = null;
+        }
+
+        function submitTestDrive(event) {
+            event.preventDefault();
+            
+            const formData = new FormData(event.target);
+            const testDriveData = {
+                car: selectedTestDriveCar,
+                customer: {
+                    name: formData.get('customerName'),
+                    email: formData.get('customerEmail'),
+                    phone: formData.get('customerPhone'),
+                    license: formData.get('customerLicense')
+                },
+                appointment: {
+                    date: formData.get('testDriveDate'),
+                    time: formData.get('testDriveTime'),
+                    location: formData.get('dealershipLocation')
+                },
+                notes: formData.get('specialRequests')
+            };
+            
+            // Simulate booking process
+            setTimeout(() => {
+                showConfirmation(testDriveData);
+                event.target.reset();
+                cancelTestDrive();
+            }, 1000);
+        }
+
+        function showConfirmation(bookingData) {
+            const modal = document.getElementById('test-drive-confirmation');
+            const details = document.getElementById('confirmation-details');
+            
+            const appointmentDate = new Date(bookingData.appointment.date);
+            const formattedDate = appointmentDate.toLocaleDateString('en-US', { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            });
+            
+            details.innerHTML = `
+                <div style="background: #f0fdf4; padding: 20px; border-radius: 10px; margin-bottom: 20px; border-left: 4px solid #059669;">
+                    <h4>Booking Details:</h4>
+                    <p><strong>Vehicle:</strong> ${bookingData.car.year} ${bookingData.car.make} ${bookingData.car.model}</p>
+                    <p><strong>Date:</strong> ${formattedDate}</p>
+                    <p><strong>Time:</strong> ${bookingData.appointment.time}</p>
+                    <p><strong>Location:</strong> ${bookingData.appointment.location}</p>
+                    <p><strong>Customer:</strong> ${bookingData.customer.name}</p>
+                    <p><strong>Email:</strong> ${bookingData.customer.email}</p>
+                    <p><strong>Phone:</strong> ${bookingData.customer.phone}</p>
+                </div>
+                <div style="background: #fef3c7; padding: 20px; border-radius: 10px; border-left: 4px solid #f59e0b;">
+                    <h4>What's Next:</h4>
+                    <ul style="margin: 10px 0 0 20px;">
+                        <li>You'll receive a confirmation email shortly</li>
+                        <li>Our team will call you 24 hours before your appointment</li>
+                        <li>Please bring a valid driver's license</li>
+                        <li>Arrive 15 minutes early for paperwork</li>
+                    </ul>
+                </div>
+            `;
+            
+            modal.style.display = 'flex';
+        }
+
+        function closeConfirmation() {
+            document.getElementById('test-drive-confirmation').style.display = 'none';
+        }
+
+        // Smooth scrolling for better UX
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add smooth scrolling to all navigation links
+            const navItems = document.querySelectorAll('.nav-item');
+            navItems.forEach(item => {
+                item.addEventListener('click', function(e) {
+                    e.preventDefault();
+                });
+            });
+            
+            // Handle window resize for mobile menu
+            window.addEventListener('resize', function() {
+                if (window.innerWidth > 768) {
+                    document.getElementById('navigation').classList.remove('active');
+                }
+            });
+        });
+
+        // Add some interactive effects
+        document.addEventListener('mousemove', function(e) {
+            const cards = document.querySelectorAll('.card');
+            cards.forEach(card => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                if (x >= 0 && x <= rect.width && y >= 0 && y <= rect.height) {
+                    const centerX = rect.width / 2;
+                    const centerY = rect.height / 2;
+                    const rotateX = (y - centerY) / 10;
+                    const rotateY = (centerX - x) / 10;
+                    
+                    card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateZ(10px)`;
+                } else {
+                    card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) translateZ(0px)';
+                }
+            });
+        });
+
+        // Gallery functionality
+        const galleryImages = [
+            {
+                src: "https://images.pexels.com/photos/112460/pexels-photo-112460.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+                title: "Elite GT Front View",
+                description: "Aggressive styling meets elegance in this stunning front perspective of our flagship Elite GT model.",
+                category: "exterior"
+            },
+            {
+                src: "https://images.pexels.com/photos/2127733/pexels-photo-2127733.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+                title: "Elite Sport Side Profile",
+                description: "The aerodynamic perfection of the Elite Sport showcases our commitment to performance and design.",
+                category: "exterior"
+            },
+            {
+                src: "https://hips.hearstapps.com/hmg-prod/images/2022-rolls-royce-ghost-black-badge-104-1635439026.jpg",
+                title: "Elite Luxury Rear View",
+                description: "Sophisticated design language defines the rear profile of our luxury-focused model.",
+                category: "exterior"
+            },
+            {
+                src: "https://www.koonstoyotaannapolis.com/blogs/3858/wp-content/uploads/2024/01/2024-toyota-camry-hybrid.jpg",
+                title: "Elite Hybrid Night Shot",
+                description: "Advanced LED lighting technology illuminates the night with the Elite Hybrid's eco-friendly design.",
+                category: "exterior"
+            },
+            {
+                src: "https://images.pexels.com/photos/3778769/pexels-photo-3778769.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+                title: "Luxury Interior Dashboard",
+                description: "Premium materials and craftsmanship create an unparalleled driving environment.",
+                category: "interior"
+            },
+            {
+                src: "https://cdn.recaro-automotive.com/fileadmin/01-products/oem/mercedes-benz/amg-gla-45-yne-2017/mercedes-gla-45-yellow-night-2017-03-960x640.jpg?v=1603970886",
+                title: "Sport Seats",
+                description: "Racing-inspired comfort meets luxury in our performance-oriented seating design.",
+                category: "interior"
+            },
+            {
+                src: "https://www.evanshalshaw.com/-/media/evanshalshaw/blog/what-is-a-car-infotainment-system/infotainment-system-1920x774px.ashx",
+                title: "Infotainment System",
+                description: "Advanced connectivity features and intuitive controls define our state-of-the-art infotainment.",
+                category: "interior"
+            },
+            {
+                src: "https://images.pexels.com/photos/14667493/pexels-photo-14667493.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+                title: "Rear Passenger Area",
+                description: "Executive-class comfort extends to every passenger with premium rear seating arrangements.",
+                category: "interior"
+            },
+            {
+                src: "https://c4.wallpaperflare.com/wallpaper/67/102/485/engine-bmw-motor-2018-biturbo-hd-wallpaper-preview.jpg",
+                title: "V8 Twin-Turbo Engine",
+                description: "650 HP of pure power delivered through our meticulously engineered V8 twin-turbo powerplant.",
+                category: "engine"
+            },
+            {
+                src: "https://media.sciencephoto.com/image/c0360888/800wm/C0360888-Hybrid_car_powertrain.jpg",
+                title: "Hybrid Powertrain",
+                description: "Sustainable performance technology combines electric efficiency with gasoline power.",
+                category: "engine"
+            },
+            {
+                src: "https://images.pexels.com/photos/11456554/pexels-photo-11456554.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
+                title: "Engine Bay Details",
+                description: "Precision engineering is evident in every component of our advanced engine bay design.",
+                category: "engine"
+            },
+            {
+                src: "https://i.pinimg.com/736x/4e/04/1c/4e041c16b3b1e976a37dc9e61bc5d641.jpg",
+                title: "Wheel Design",
+                description: "Performance meets aesthetics in our custom-designed alloy wheel configurations.",
+                category: "details"
+            },
+            {
+                src: "https://a-static.besthdwallpaper.com/it-is-remarkable-with-its-bmw-neon-light-headlights-which-look-perfect-wallpaper-2880x1800-103984_8.jpg",
+                title: "Headlight Technology",
+                description: "Adaptive LED matrix lighting provides superior illumination and distinctive styling.",
+                category: "details"
+            },
+            {
+                src: "https://media.istockphoto.com/id/487700790/photo/car-contour-carbon-fibre.jpg?s=612x612&w=0&k=20&c=SoK4KFoj3XqQpE6zQSAZHJj7Jq8sp4qG9BLbWYoguLQ=",
+                title: "Carbon Fiber Details",
+                description: "Lightweight performance materials enhance both function and visual appeal.",
+                category: "details"
+            },
+            {
+                src: "https://images.unsplash.com/photo-1619255566224-fca5ef4ca1be?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8Y2FyJTIwZXhoYXVzdHxlbnwwfHwwfHx8MA%3D%3D",
+                title: "Exhaust System",
+                description: "Performance-tuned acoustics deliver the perfect soundtrack to your driving experience.",
+                category: "details"
+            }
+        ];
+
+        let currentLightboxIndex = 0;
+
+        // Filter gallery function
+        function filterGallery(category) {
+            const items = document.querySelectorAll('.gallery-item');
+            const buttons = document.querySelectorAll('.filter-btn');
+            
+            // Update active button
+            buttons.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // Filter items
+            items.forEach(item => {
+                if (category === 'all' || item.dataset.category === category) {
+                    item.classList.remove('hidden');
+                    item.classList.add('show');
+                } else {
+                    item.classList.add('hidden');
+                    item.classList.remove('show');
+                }
+            });
+        }
+
+        // Lightbox functions
+        function openLightbox(index) {
+            currentLightboxIndex = index;
+            const lightbox = document.getElementById('lightbox');
+            const image = document.getElementById('lightbox-image');
+            const title = document.getElementById('lightbox-title');
+            const description = document.getElementById('lightbox-description');
+            
+            const imageData = galleryImages[index];
+            
+            image.src = imageData.src;
+            image.alt = imageData.title;
+            title.textContent = imageData.title;
+            description.textContent = imageData.description;
+            
+            lightbox.style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeLightbox() {
+            const lightbox = document.getElementById('lightbox');
+            lightbox.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        function changeLightboxImage(direction) {
+            currentLightboxIndex += direction;
+            
+            if (currentLightboxIndex >= galleryImages.length) {
+                currentLightboxIndex = 0;
+            } else if (currentLightboxIndex < 0) {
+                currentLightboxIndex = galleryImages.length - 1;
+            }
+            
+            const image = document.getElementById('lightbox-image');
+            const title = document.getElementById('lightbox-title');
+            const description = document.getElementById('lightbox-description');
+            
+            const imageData = galleryImages[currentLightboxIndex];
+            
+            image.src = imageData.src;
+            image.alt = imageData.title;
+            title.textContent = imageData.title;
+            description.textContent = imageData.description;
+        }
+
+        // Close lightbox with escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeLightbox();
+            } else if (e.key === 'ArrowLeft') {
+                changeLightboxImage(-1);
+            } else if (e.key === 'ArrowRight') {
+                changeLightboxImage(1);
+            }
+        });
+
+        // Close lightbox when clicking outside the image
+        document.getElementById('lightbox').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeLightbox();
+            }
+        });
+
+        // Enhanced Chatbot functionality
+        let chatbotOpen = false;
+        let chatHistory = [];
+
+        function toggleChatbot() {
+            const window = document.getElementById('chatbot-window');
+            const toggle = document.querySelector('.chatbot-toggle');
+            
+            chatbotOpen = !chatbotOpen;
+            
+            if (chatbotOpen) {
+                window.classList.add('open');
+                toggle.innerHTML = '<span class="chatbot-icon">✕</span>';
+                document.getElementById('chatbot-input').focus();
+            } else {
+                window.classList.remove('open');
+                toggle.innerHTML = '<span class="chatbot-icon">🤖</span><span class="chatbot-text">Ask About Cars</span>';
+            }
+        }
+
+        function handleChatKeyPress(event) {
+            const input = document.getElementById('chatbot-input');
+            const sendBtn = document.getElementById('chatbot-send');
+            
+            // Enable/disable send button based on input
+            sendBtn.disabled = input.value.trim() === '';
+            
+            if (event.key === 'Enter' && input.value.trim() !== '') {
+                sendMessage();
+            }
+        }
+
+        function askQuickQuestion(question) {
+            document.getElementById('chatbot-input').value = question;
+            sendMessage();
+        }
+
+        function addMessage(content, isUser = false) {
+            const messagesContainer = document.getElementById('chatbot-messages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${isUser ? 'user' : 'bot'}`;
+            
+            // Format message with basic HTML support
+            const formattedMessage = formatChatMessage(content);
+            messageDiv.innerHTML = formattedMessage;
+            
+            messagesContainer.appendChild(messageDiv);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            
+            // Store in chat history
+            chatHistory.push({ message: content, sender: isUser ? 'user' : 'bot', timestamp: new Date() });
+        }
+
+        function formatChatMessage(message) {
+            // Convert line breaks to <br>
+            let formatted = message.replace(/\n/g, '<br>');
+            
+            // Convert **bold** to <strong>
+            formatted = formatted.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+            
+            // Convert *italic* to <em>
+            formatted = formatted.replace(/\*(.*?)\*/g, '<em>$1</em>');
+            
+            // Convert numbered lists
+            formatted = formatted.replace(/^\d+\.\s(.+)$/gm, '<li>$1</li>');
+            if (formatted.includes('<li>')) {
+                formatted = formatted.replace(/(<li>.*<\/li>)/s, '<ol>$1</ol>');
+            }
+            
+            // Convert bullet points
+            formatted = formatted.replace(/^[-•]\s(.+)$/gm, '<li>$1</li>');
+            if (formatted.includes('<li>') && !formatted.includes('<ol>')) {
+                formatted = formatted.replace(/(<li>.*<\/li>)/s, '<ul>$1</ul>');
+            }
+            
+            return formatted;
+        }
+
+        function addTypingIndicator() {
+            const messagesContainer = document.getElementById('chatbot-messages');
+            const typingDiv = document.createElement('div');
+            typingDiv.className = 'message typing';
+            typingDiv.id = 'typing-indicator';
+            
+            const indicator = document.createElement('div');
+            indicator.className = 'typing-indicator';
+            indicator.innerHTML = '<div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div>';
+            
+            typingDiv.appendChild(indicator);
+            messagesContainer.appendChild(typingDiv);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        function removeTypingIndicator() {
+            const typingIndicator = document.getElementById('typing-indicator');
+            if (typingIndicator) {
+                typingIndicator.remove();
+            }
+        }
+
+        // Enhanced knowledge base for comprehensive automotive responses
+        const enhancedCarKnowledge = {
+            elite: {
+                "elite gt": "The Elite GT is our flagship grand tourer, combining luxury and performance in perfect harmony. It features a V8 Twin-Turbo engine with 650 HP, reaching 0-60 mph in just 3.2 seconds with a top speed of 205 mph.",
+                "elite sport": "The Elite Sport is designed for the ultimate driving enthusiast with pure performance-focused engineering. It features enhanced aerodynamics, track-tuned suspension, and racing-inspired design elements.",
+                "elite luxury": "The Elite Luxury offers uncompromising comfort for the discerning driver. It features premium hand-stitched leather interiors, executive-class rear seating, advanced noise cancellation, and luxury amenities.",
+                "elite hybrid": "The Elite Hybrid combines sustainable performance with our advanced hybrid technology. It delivers impressive power while reducing emissions by up to 30% compared to traditional engines."
+            },
+            specifications: {
+                "engine": "Our flagship models feature a V8 Twin-Turbo engine producing 650 HP and 750 lb-ft of torque, delivering exceptional performance and smooth power delivery.",
+                "performance": "The Elite Series can accelerate from 0-60 mph in as little as 3.2 seconds, with a top speed of 205 mph, showcasing our commitment to high-performance engineering.",
+                "dimensions": "The Elite Series measures 195.5 inches in length, 76.8 inches in width, 54.2 inches in height, with a wheelbase of 115.7 inches for optimal balance and comfort.",
+                "technology": "All Elite models feature a 12.3\" touchscreen infotainment system, premium 15-speaker sound system, Level 2 autonomous driving capabilities, 5G connectivity, and WiFi hotspot functionality."
+            },
+            general: {
+                "test drive": "You can book a test drive for any of our Elite models through our Test Drive section. Simply select your preferred model, fill out the booking form, and choose your preferred date, time, and dealership location.",
+                "price": "The Elite Series starts at $120,000 for the Elite Hybrid, $150,000 for the Elite Luxury, $180,000 for the Elite GT, and $200,000 for the Elite Sport. Custom configurations may vary in price.",
+                "warranty": "All Elite models come with a comprehensive 5-year/60,000-mile warranty and 3-year complimentary maintenance program, ensuring peace of mind ownership.",
+                "dealerships": "We have Elite dealerships in major cities across the country. You can find your nearest dealership through our contact section or by calling our customer service.",
+                "delivery": "Typical delivery time is 4-6 weeks for standard configurations, and 8-12 weeks for custom orders with personalized options."
+            },
+            automotive: {
+                "maintenance": "Regular maintenance is crucial for any vehicle. For most cars, follow the manufacturer's schedule: oil changes every 5,000-7,500 miles, tire rotations every 6,000-8,000 miles, and brake inspections annually.",
+                "electric vehicles": "Electric vehicles offer zero emissions, lower operating costs, instant torque delivery, and quiet operation. Popular EVs include Tesla Model S, BMW i4, Mercedes EQS, and Audi e-tron GT.",
+                "hybrid technology": "Hybrid vehicles combine gasoline engines with electric motors for improved fuel efficiency. They automatically switch between power sources for optimal performance and economy.",
+                "safety features": "Modern cars include advanced safety features like automatic emergency braking, blind spot monitoring, lane departure warning, adaptive cruise control, and collision avoidance systems.",
+                "fuel efficiency": "To improve fuel efficiency: maintain proper tire pressure, remove excess weight, use cruise control on highways, combine trips, and keep up with regular maintenance.",
+                "car buying": "When buying a car, consider your budget, intended use, fuel efficiency, safety ratings, reliability scores, resale value, and total cost of ownership including insurance and maintenance."
+            }
+        };
+
+        function getLocalResponse(query) {
+            query = query.toLowerCase();
+            
+            // Check for Elite model information
+            for (const model in enhancedCarKnowledge.elite) {
+                if (query.includes(model)) {
+                    return enhancedCarKnowledge.elite[model];
+                }
+            }
+            
+            // Check for specifications
+            for (const spec in enhancedCarKnowledge.specifications) {
+                if (query.includes(spec)) {
+                    return enhancedCarKnowledge.specifications[spec];
+                }
+            }
+            
+            // Check for general Elite information
+            for (const info in enhancedCarKnowledge.general) {
+                if (query.includes(info)) {
+                    return enhancedCarKnowledge.general[info];
+                }
+            }
+            
+            // Check for automotive knowledge
+            for (const topic in enhancedCarKnowledge.automotive) {
+                if (query.includes(topic)) {
+                    return enhancedCarKnowledge.automotive[topic];
+                }
+            }
+            
+            // Handle navigation queries
+            if (query.includes("test drive") || query.includes("book") || query.includes("schedule")) {
+                showSection('test-drive');
+                return "I've opened the Test Drive section for you. You can book a test drive for any of our Elite models by selecting your preferred vehicle and filling out the booking form.";
+            } else if (query.includes("gallery") || query.includes("photos") || query.includes("images")) {
+                showSection('gallery');
+                return "I've opened the gallery section for you. You can browse through our collection of Elite car photos organized by category.";
+            } else if (query.includes("contact") || query.includes("reach") || query.includes("talk to")) {
+                showSection('contact');
+                return "I've opened the contact section for you. You can fill out the form to get in touch with our team.";
+            } else if (query.includes("specifications") || query.includes("specs")) {
+                showSection('specifications');
+                return "I've opened the specifications section for you. Here you can find detailed technical information about our Elite models.";
+            } else if (query.includes("models") || query.includes("lineup")) {
+                showSection('models');
+                return "I've opened the models section for you. You can explore our full lineup of Elite cars including GT, Sport, Luxury, and Hybrid variants.";
+            } else if (query.includes("about") || query.includes("company") || query.includes("history")) {
+                showSection('about');
+                return "I've opened the about section for you. Learn more about our company heritage, innovation, and craftsmanship.";
+            }
+            
+            // Handle general automotive questions
+            if (query.includes("compare") && (query.includes("tesla") || query.includes("bmw") || query.includes("mercedes"))) {
+                return "I can help you compare vehicles! For electric luxury sedans, consider: Tesla Model S (longest range, advanced tech), BMW i7 (luxury comfort, traditional feel), Mercedes EQS (ultra-quiet, premium interior). Each offers unique advantages depending on your priorities.";
+            }
+            
+            if (query.includes("family suv") || query.includes("best suv")) {
+                return "For 2024 family SUVs, top choices include: Toyota Highlander (reliability, value), Honda Pilot (space, features), Mazda CX-9 (driving dynamics), Subaru Ascent (safety, AWD), and Acura MDX (luxury, performance). Consider your budget, seating needs, and feature priorities.";
+            }
+            
+            if (query.includes("oil change") || query.includes("maintenance")) {
+                return "Regular maintenance keeps your car running smoothly! Oil changes are typically needed every 5,000-7,500 miles for conventional oil, or 7,500-10,000 miles for synthetic. Also rotate tires every 6,000-8,000 miles, check brakes annually, and follow your manufacturer's maintenance schedule.";
+            }
+            
+            return null; // No local response found
+        }
+
+        async function sendMessage() {
+            const input = document.getElementById('chatbot-input');
+            const sendButton = document.getElementById('chatbot-send');
+            const message = input.value.trim();
+            
+            if (!message) return;
+            
+            // Add user message
+            addMessage(message, true);
+            input.value = '';
+            sendButton.disabled = true;
+            
+            // Add typing indicator
+            addTypingIndicator();
+            
+            try {
+                // First try local knowledge base
+                const localResponse = getLocalResponse(message);
+                
+                if (localResponse) {
+                    // Use local response
+                    setTimeout(() => {
+                        removeTypingIndicator();
+                        addMessage(localResponse);
+                        sendButton.disabled = false;
+                    }, 1000);
+                } else {
+                    // Try Gemini API for comprehensive automotive knowledge
+                    const response = await fetch('/api/chat', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ message })
+                    });
+                    
+                    if (response.ok) {
+                        const data = await response.json();
+                        removeTypingIndicator();
+                        addMessage(data.response);
+                    } else {
+                        throw new Error('API request failed');
+                    }
+                }
+            } catch (error) {
+                console.error('Chat error:', error);
+                removeTypingIndicator();
+                addMessage("I'm sorry, I'm having trouble connecting right now. Please try asking about our Elite car models, specifications, or use the contact form for assistance. I can also help with general automotive questions about maintenance, buying advice, and car comparisons!");
+            } finally {
+                sendButton.disabled = false;
+            }
+        }
+
+        // Enable send button when user types
+        document.addEventListener('DOMContentLoaded', function() {
+            const input = document.getElementById('chatbot-input');
+            if (input) {
+                input.addEventListener('input', function() {
+                    const sendBtn = document.getElementById('chatbot-send');
+                    sendBtn.disabled = this.value.trim() === '';
+                });
+            }
+        });
+    </script>
+    <button id="logoutBtn" class="btn btn-outline-light">Logout</button>
+</body>
+</html>

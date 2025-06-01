@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Templates - Elite Car Series</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .email-template {
+            border: 1px solid #ddd;
+            margin: 20px 0;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        .template-title {
+            background: #1a1a1a;
+            color: white;
+            padding: 10px;
+            margin: -20px -20px 20px -20px;
+            border-radius: 8px 8px 0 0;
+        }
+        .variable {
+            background: #f0f8ff;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: monospace;
+            color: #0066cc;
+        }
+        .header {
+            text-align: center;
+            padding: 20px 0;
+            border-bottom: 2px solid #1a1a1a;
+            margin-bottom: 30px;
+        }
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #1a1a1a;
+        }
+        .booking-details {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        .footer {
+            text-align: center;
+            padding: 20px 0;
+            border-top: 1px solid #ddd;
+            margin-top: 30px;
+            color: #666;
+            font-size: 14px;
+        }
+        .button {
+            display: inline-block;
+            background: #1a1a1a;
+            color: white;
+            padding: 12px 24px;
+            text-decoration: none;
+            border-radius: 5px;
+            margin: 10px 5px;
+        }
+        .button.secondary {
+            background: #666;
+        }
+    </style>
+</head>
+<body>
+    <!-- Customer Confirmation Email Template -->
+    <div class="email-template">
+        <div class="template-title">
+            <h3>Customer Test Drive Confirmation Email</h3>
+            <p>Template ID: test_drive_confirmation</p>
+        </div>
+
+        <div class="header">
+            <div class="logo">ELITE CAR SERIES</div>
+            <p>Premium Automotive Experience</p>
+        </div>
+
+        <h2>Test Drive Confirmation</h2>
+        
+        <p>Dear <span class="variable">{{customer_name}}</span>,</p>
+        
+        <p>Thank you for booking a test drive with Elite Car Series! We're excited to help you experience the luxury and performance of your selected vehicle.</p>
+        
+        <div class="booking-details">
+            <h3>📅 Your Test Drive Details</h3>
+            <p><strong>Booking Reference:</strong> <span class="variable">{{booking_reference}}</span></p>
+            <p><strong>Vehicle:</strong> <span class="variable">{{car_year}}</span> <span class="variable">{{car_make}}</span> <span class="variable">{{car_model}}</span></p>
+            <p><strong>Date:</strong> <span class="variable">{{test_drive_date}}</span></p>
+            <p><strong>Time:</strong> <span class="variable">{{test_drive_time}}</span></p>
+            <p><strong>Location:</strong> <span class="variable">{{dealership_name}}</span><br>
+               <span class="variable">{{dealership_address}}</span></p>
+            <p><strong>Contact:</strong> <span class="variable">{{dealership_phone}}</span></p>
+        </div>
+
+        <h3>🚗 What to Bring</h3>
+        <ul>
+            <li>Valid driver's license</li>
+            <li>Proof of insurance</li>
+            <li>Comfortable driving shoes</li>
+            <li>Any questions about the vehicle</li>
+        </ul>
+
+        <h3>⏰ Important Notes</h3>
+        <ul>
+            <li>Please arrive 15 minutes early for paperwork</li>
+            <li>Test drives typically last 30-45 minutes</li>
+            <li>You'll receive a reminder email 24 hours before your appointment</li>
+            <li>Feel free to bring a co-driver for a second opinion</li>
+        </ul>
+
+        <div style="text-align: center; margin: 30px 0;">
+            <a href="{{confirmation_link}}" class="button">Confirm Appointment</a>
+            <a href="{{cancellation_link}}" class="button secondary">Reschedule/Cancel</a>
+        </div>
+
+        <p>If you have any questions or need to make changes to your appointment, please don't hesitate to contact us at <span class="variable">{{dealership_phone}}</span> or reply to this email.</p>
+
+        <p>We look forward to seeing you soon!</p>
+
+        <p>Best regards,<br>
+        The Elite Car Series Team</p>
+
+        <div class="footer">
+            <p><span class="variable">{{dealership_name}}</span> | <span class="variable">{{dealership_address}}</span></p>
+            <p>Phone: <span class="variable">{{dealership_phone}}</span> | Email: info@elitecarseries.com</p>
+            <p>© 2024 Elite Car Series. All rights reserved.</p>
+        </div>
+    </div>
+
+    <!-- Admin Notification Email Template -->
+    <div class="email-template">
+        <div class="template-title">
+            <h3>Admin Notification Email</h3>
+            <p>Template ID: admin_notification</p>
+        </div>
+
+        <div class="header">
+            <div class="logo">ELITE CAR SERIES</div>
+            <p>New Test Drive Booking Alert</p>
+        </div>
+
+        <h2>🚨 New Test Drive Booking</h2>
+        
+        <p>A new test drive has been booked through the website.</p>
+        
+        <div class="booking-details">
+            <h3>📋 Booking Details</h3>
+            <p><strong>Booking Reference:</strong> <span class="variable">{{booking_reference}}</span></p>
+            <p><strong>Timestamp:</strong> <span class="variable">{{booking_timestamp}}</span></p>
+            
+            <h4>Customer Information</h4>
+            <p><strong>Name:</strong> <span class="variable">{{customer_name}}</span></p>
+            <p><strong>Email:</strong> <span class="variable">{{customer_email}}</span></p>
+            <p><strong>Phone:</strong> <span class="variable">{{customer_phone}}</span></p>
+            
+            <h4>Vehicle Information</h4>
+            <p><strong>Vehicle:</strong> <span class="variable">{{car_year}}</span> <span class="variable">{{car_make}}</span> <span class="variable">{{car_model}}</span></p>
+            
+            <h4>Appointment Details</h4>
+            <p><strong>Date:</strong> <span class="variable">{{test_drive_date}}</span></p>
+            <p><strong>Time:</strong> <span class="variable">{{test_drive_time}}</span></p>
+            
+            <h4>Special Requests</h4>
+            <p><span class="variable">{{special_requests}}</span></p>
+        </div>
+
+        <h3>📋 Action Required</h3>
+        <ul>
+            <li>Confirm vehicle availability</li>
+            <li>Prepare vehicle for test drive</li>
+            <li>Update calendar/scheduling system</li>
+            <li>Contact customer if needed</li>
+        </ul>
+
+        <div style="text-align: center; margin: 30px 0;">
+            <a href="#" class="button">View in Admin Panel</a>
+            <a href="mailto:{{customer_email}}" class="button secondary">Contact Customer</a>
+        </div>
+
+        <div class="footer">
+            <p>Elite Car Series Admin System</p>
+            <p>This is an automated notification. Please do not reply to this email.</p>
+        </div>
+    </div>
+
+    <!-- Test Drive Reminder Email Template -->
+    <div class="email-template">
+        <div class="template-title">
+            <h3>Test Drive Reminder Email</h3>
+            <p>Template ID: test_drive_reminder</p>
+        </div>
+
+        <div class="header">
+            <div class="logo">ELITE CAR SERIES</div>
+            <p>Test Drive Reminder</p>
+        </div>
+
+        <h2>⏰ Test Drive Reminder</h2>
+        
+        <p>Dear <span class="variable">{{customer_name}}</span>,</p>
+        
+        <p>This is a friendly reminder that your test drive appointment is scheduled for tomorrow!</p>
+        
+        <div class="booking-details">
+            <h3>📅 Your Appointment Details</h3>
+            <p><strong>Booking Reference:</strong> <span class="variable">{{booking_reference}}</span></p>
+            <p><strong>Vehicle:</strong> <span class="variable">{{car_make}}</span> <span class="variable">{{car_model}}</span></p>
+            <p><strong>Date:</strong> <span class="variable">{{test_drive_date}}</span></p>
+            <p><strong>Time:</strong> <span class="variable">{{test_drive_time}}</span></p>
+            <p><strong>Location:</strong> <span class="variable">{{dealership_name}}</span><br>
+               <span class="variable">{{dealership_address}}</span></p>
+        </div>
+
+        <h3>✅ Preparation Checklist</h3>
+        <div style="background: #f0f8ff; padding: 15px; border-radius: 8px; margin: 20px 0;">
+            <pre style="margin: 0; font-family: inherit; white-space: pre-line;"><span class="variable">{{preparation_tips}}</span></pre>
+        </div>
+
+        <h3>🌟 What to Expect</h3>
+        <ul>
+            <li>Vehicle overview and feature demonstration</li>
+            <li>30-45 minute test drive experience</li>
+            <li>Q&A session with our product specialist</li>
+            <li>Financing and purchase options discussion</li>
+        </ul>
+
+        <p>If you need to reschedule or have any questions, please contact us at <span class="variable">{{dealership_phone}}</span>.</p>
+
+        <p>We're excited to see you tomorrow!</p>
+
+        <p>Best regards,<br>
+        The Elite Car Series Team</p>
+
+        <div class="footer">
+            <p><span class="variable">{{dealership_name}}</span> | <span class="variable">{{dealership_address}}</span></p>
+            <p>Phone: <span class="variable">{{dealership_phone}}</span></p>
+        </div>
+    </div>
+
+    <div style="margin: 40px 0; padding: 20px; background: #f0f8ff; border-radius: 8px;">
+        <h3>📧 EmailJS Setup Instructions</h3>
+        <ol>
+            <li>Create an account at <a href="https://www.emailjs.com/" target="_blank">EmailJS.com</a></li>
+            <li>Set up an email service (Gmail, Outlook, etc.)</li>
+            <li>Create email templates using the HTML above</li>
+            <li>Copy the template IDs and service IDs to your JavaScript configuration</li>
+            <li>Add the EmailJS SDK to your HTML: <code>&lt;script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"&gt;&lt;/script&gt;</code></li>
+        </ol>
+    </div>
+</body>
+</html>

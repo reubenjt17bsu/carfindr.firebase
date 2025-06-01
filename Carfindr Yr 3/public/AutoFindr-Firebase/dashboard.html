@@ -1,18 +1,487 @@
-<!-- dashboard.html -->
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Dashboard - Elite Car Series</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elite Car Series - Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-<body class="p-4">
-  <h2>My Favorite Cars</h2>
-  <div id="favList"></div>
+<body>
+    <!-- Loading Screen -->
+    <div id="loading-screen" class="loading-screen">
+        <div class="loading-content">
+            <div class="loading-logo">
+                <h1>ELITE CAR SERIES</h1>
+            </div>
+            <div class="loading-spinner"></div>
+            <p>Loading your dashboard...</p>
+        </div>
+    </div>
 
-  <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore-compat.js"></script>
-  <script src="js/firebase.js"></script>
-  <script src="js/main.js"></script>
+    <!-- Fixed Navbar -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <div class="logo">
+                <h2>ELITE CAR SERIES</h2>
+            </div>
+            <div class="navbar-content">
+                <div class="nav-links">
+                    <a href="#" class="nav-item" onclick="showSection('home')">Home</a>
+                    <a href="#" class="nav-item" onclick="showSection('about')">About</a>
+                    <a href="#" class="nav-item" onclick="showSection('specifications')">Specifications</a>
+                    <a href="#" class="nav-item" onclick="showSection('models')">Models</a>
+                    <a href="#" class="nav-item" onclick="showSection('car-database')">Car Database</a>
+                    <a href="#" class="nav-item" onclick="showSection('test-drive')">Test Drive</a>
+                    <a href="#" class="nav-item" onclick="showSection('gallery')">Gallery</a>
+                    <a href="#" class="nav-item" onclick="showSection('contact')">Contact</a>
+                </div>
+                <div class="search-box">
+                    <input type="text" class="search-input" placeholder="Search...">
+                    <button class="search-button" onclick="performSearch()">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+                <!-- User Profile will be added here by JavaScript -->
+            </div>
+        </div>
+    </nav>
+
+    <!-- Add padding to body to account for fixed navbar -->
+    <div class="main-content">
+
+        <!-- Hero Section -->
+        <section id="home" class="section active">
+            <div class="hero-image">
+                <img src="/placeholder.svg?height=400&width=800" alt="Luxury Car">
+            </div>
+            <div class="hero-content">
+                <h1>Welcome to Elite Car Series</h1>
+                <p>Where innovation meets luxury, and performance redefines expectations.</p>
+                <button class="explore-button" onclick="showSection('models')">Explore Our Models</button>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section id="about" class="section">
+            <h2>About Us</h2>
+            <p style="text-align: center; margin-bottom: 30px; color: #666;">
+                Driven by a passion for perfection, we craft vehicles that embody elegance, power, and cutting-edge technology.
+            </p>
+            <div class="about-content">
+                <div class="about-image">
+                    <img src="/placeholder.svg?height=300&width=400" alt="Car Interior">
+                </div>
+                <div class="about-text">
+                    <h3>Our Heritage</h3>
+                    <p>Founded in 1988, our brand has a rich history of pushing the boundaries of automotive engineering. From our early innovations to our current lineup of groundbreaking vehicles, we have always been committed to excellence.</p>
+                    <h3>Our Vision</h3>
+                    <p>To create vehicles that inspire and elevate the driving experience. We strive to combine luxury, performance, and sustainability in every car we build.</p>
+                    <h3>Our Commitment</h3>
+                    <p>We are dedicated to providing our customers with unparalleled service and support. Our team of experts is always available to answer your questions and help you find the perfect vehicle to meet your needs.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Specifications Section -->
+        <section id="specifications" class="section">
+            <h2>Specifications</h2>
+            <p style="text-align: center; margin-bottom: 30px; color: #666;">
+                Unleash the power within. Explore the detailed specifications of our flagship model.
+            </p>
+            <div class="specifications-content">
+                <div class="spec-sheet">
+                    <h3>Engine</h3>
+                    <ul>
+                        <li>Type: V8, Twin-Turbocharged</li>
+                        <li>Displacement: 4.0 Liters</li>
+                        <li>Horsepower: 650 hp</li>
+                        <li>Torque: 620 lb-ft</li>
+                    </ul>
+                </div>
+                <div class="spec-sheet">
+                    <h3>Performance</h3>
+                    <ul>
+                        <li>0-60 mph: 3.0 seconds</li>
+                        <li>Top Speed: 205 mph</li>
+                        <li>Transmission: 8-Speed Automatic</li>
+                        <li>Drive: All-Wheel Drive</li>
+                    </ul>
+                </div>
+                <div class="spec-sheet">
+                    <h3>Dimensions</h3>
+                    <ul>
+                        <li>Length: 195 inches</li>
+                        <li>Width: 79 inches</li>
+                        <li>Height: 56 inches</li>
+                        <li>Wheelbase: 115 inches</li>
+                    </ul>
+                </div>
+                <div class="spec-sheet">
+                    <h3>Features</h3>
+                    <ul>
+                        <li>Adaptive Suspension</li>
+                        <li>Carbon Ceramic Brakes</li>
+                        <li>Premium Leather Interior</li>
+                        <li>Advanced Driver-Assistance Systems</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Models Section -->
+        <section id="models" class="section">
+            <h2>Our Models</h2>
+            <p style="text-align: center; margin-bottom: 30px; color: #666;">
+                Discover our range of luxury vehicles, each designed to deliver an exceptional driving experience.
+            </p>
+            <div class="models-grid">
+                <div class="model-card">
+                    <img src="/placeholder.svg?height=200&width=350" alt="Model 1">
+                    <h3>Grand Tourer</h3>
+                    <p>The ultimate in luxury and performance, the Grand Tourer is designed for those who demand the best.</p>
+                    <button>Learn More</button>
+                </div>
+                <div class="model-card">
+                    <img src="/placeholder.svg?height=200&width=350" alt="Model 2">
+                    <h3>Sport Sedan</h3>
+                    <p>Combining sporty handling with elegant design, the Sport Sedan is perfect for the discerning driver.</p>
+                    <button>Learn More</button>
+                </div>
+                <div class="model-card">
+                    <img src="/placeholder.svg?height=200&width=350" alt="Model 3">
+                    <h3>Luxury SUV</h3>
+                    <p>With its spacious interior and advanced technology, the Luxury SUV offers unparalleled comfort and convenience.</p>
+                    <button>Learn More</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Car Database Section -->
+        <section id="car-database" class="section">
+            <h2>Car Database</h2>
+            <p style="text-align: center; margin-bottom: 30px; color: #666;">
+                Explore thousands of real car models from over 100 manufacturers
+            </p>
+            
+            <!-- Search Filters -->
+            <div class="car-search-container">
+                <div class="search-filters">
+                    <div class="filter-group">
+                        <label for="car-make">Make</label>
+                        <select id="car-make" onchange="loadCarModels()">
+                            <option value="">Select Make</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="car-model">Model</label>
+                        <select id="car-model">
+                            <option value="">Select Model</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="fuel-type">Fuel Type</label>
+                        <select id="fuel-type">
+                            <option value="">Any</option>
+                            <option value="gas">Gas</option>
+                            <option value="diesel">Diesel</option>
+                            <option value="electricity">Electric</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="car-year">Year</label>
+                        <input type="number" id="car-year" placeholder="e.g. 2023" min="1990" max="2024">
+                    </div>
+                    <button class="search-cars-btn" onclick="searchCars()">Search Cars</button>
+                </div>
+            </div>
+            
+            <!-- Loading indicator -->
+            <div id="cars-loading" class="loading-indicator" style="display: none;">
+                <div class="loading-spinner"></div>
+                <p>Loading car data...</p>
+            </div>
+            
+            <!-- Results container -->
+            <div id="cars-results" class="cars-results-grid"></div>
+        </section>
+
+        <!-- Test Drive Section -->
+        <section id="test-drive" class="section">
+            <h2>Book a Test Drive</h2>
+            <p style="text-align: center; margin-bottom: 30px; color: #666;">
+                Experience the thrill firsthand. Schedule your test drive today and feel the power, luxury, and innovation of our vehicles.
+            </p>
+            
+            <!-- Test Drive Options -->
+            <div class="test-drive-options">
+                <div class="test-drive-card elite-cars">
+                    <div class="test-drive-header">
+                        <h3>🏆 Elite Car Series</h3>
+                        <p>Experience our luxury flagship models</p>
+                    </div>
+                    <div class="elite-models-grid">
+                        <div class="elite-model-option" onclick="selectEliteModel('Elite GT')">
+                            <img src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80" alt="Elite GT">
+                            <h4>Elite GT</h4>
+                            <p>V8 Twin-Turbo • 650 HP</p>
+                        </div>
+                        <div class="elite-model-option" onclick="selectEliteModel('Elite Sport')">
+                            <img src="https://images.unsplash.com/photo-1544636331-e26879cd4d9b?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80" alt="Elite Sport">
+                            <h4>Elite Sport</h4>
+                            <p>Racing Performance • 0-60 in 3.2s</p>
+                        </div>
+                        <div class="elite-model-option" onclick="selectEliteModel('Elite Luxury')">
+                            <img src="https://images.unsplash.com/photo-1555215695-3004980ad54e?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80" alt="Elite Luxury">
+                            <h4>Elite Luxury</h4>
+                            <p>Premium Comfort • Executive Class</p>
+                        </div>
+                        <div class="elite-model-option" onclick="selectEliteModel('Elite Hybrid')">
+                            <img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80" alt="Elite Hybrid">
+                            <h4>Elite Hybrid</h4>
+                            <p>Eco Performance • Sustainable Luxury</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="test-drive-card database-cars">
+                    <div class="test-drive-header">
+                        <h3>🚗 Any Car Model</h3>
+                        <p>Search and test drive any car from our database</p>
+                    </div>
+                    <div class="car-search-for-test-drive">
+                        <div class="search-filters-compact">
+                            <select id="test-drive-make" onchange="loadTestDriveModels()">
+                                <option value="">Select Make</option>
+                            </select>
+                            <select id="test-drive-model">
+                                <option value="">Select Model</option>
+                            </select>
+                            <input type="number" id="test-drive-year" placeholder="Year" min="2015" max="2024">
+                            <button onclick="searchTestDriveCars()" class="search-test-drive-btn">Find Cars</button>
+                        </div>
+                        <div id="test-drive-car-results" class="test-drive-results"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Booking Form -->
+            <div id="test-drive-booking-form" class="test-drive-booking" style="display: none;">
+                <div class="booking-header">
+                    <h3>📅 Schedule Your Test Drive</h3>
+                    <div class="selected-car-info" id="selected-car-info"></div>
+                </div>
+                
+                <form id="test-drive-form" onsubmit="submitTestDrive(event)">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="customer-name">Full Name *</label>
+                            <input type="text" id="customer-name" name="customerName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="customer-email">Email Address *</label>
+                            <input type="email" id="customer-email" name="customerEmail" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="customer-phone">Phone Number *</label>
+                            <input type="tel" id="customer-phone" name="customerPhone" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="customer-license">Driver's License Number *</label>
+                            <input type="text" id="customer-license" name="customerLicense" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="test-drive-date">Preferred Date *</label>
+                            <input type="date" id="test-drive-date" name="testDriveDate" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="test-drive-time">Preferred Time *</label>
+                            <select id="test-drive-time" name="testDriveTime" required>
+                                <option value="">Select Time</option>
+                                <option value="09:00">9:00 AM</option>
+                                <option value="10:00">10:00 AM</option>
+                                <option value="11:00">11:00 AM</option>
+                                <option value="12:00">12:00 PM</option>
+                                <option value="13:00">1:00 PM</option>
+                                <option value="14:00">2:00 PM</option>
+                                <option value="15:00">3:00 PM</option>
+                                <option value="16:00">4:00 PM</option>
+                                <option value="17:00">5:00 PM</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="dealership-location">Preferred Dealership Location *</label>
+                        <select id="dealership-location" name="dealershipLocation" required>
+                            <option value="">Select Location</option>
+                            <option value="downtown">Downtown Showroom</option>
+                            <option value="north">North Side Location</option>
+                            <option value="south">South Side Location</option>
+                            <option value="east">East Side Location</option>
+                            <option value="west">West Side Location</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="special-requests">Special Requests or Notes</label>
+                        <textarea id="special-requests" name="specialRequests" rows="3" placeholder="Any specific features you'd like to test, accessibility needs, or other requests..."></textarea>
+                    </div>
+                    
+                    <div class="form-group checkbox-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="terms-agreement" name="termsAgreement" required>
+                            <span class="checkmark"></span>
+                            I agree to the <a href="#" onclick="showTerms()">Terms and Conditions</a> and confirm I have a valid driver's license
+                        </label>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="button" onclick="cancelTestDrive()" class="cancel-btn">Cancel</button>
+                        <button type="submit" class="submit-test-drive-btn">Book Test Drive</button>
+                    </div>
+                </form>
+            </div>
+            
+            <!-- Confirmation Modal -->
+            <div id="test-drive-confirmation" class="modal" style="display: none;">
+                <div class="modal-content">
+                    <div class="confirmation-header">
+                        <h3>✅ Test Drive Booked Successfully!</h3>
+                    </div>
+                    <div class="confirmation-details" id="confirmation-details"></div>
+                    <div class="confirmation-actions">
+                        <button onclick="closeConfirmation()" class="close-confirmation-btn">Close</button>
+                        <button onclick="addToCalendar()" class="add-calendar-btn">Add to Calendar</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Gallery Section -->
+        <section id="gallery" class="section">
+            <h2>Gallery</h2>
+            <p style="text-align: center; margin-bottom: 30px; color: #666;">
+                A visual journey through our world of luxury and performance.
+            </p>
+            <div class="gallery-grid">
+                <img src="/placeholder.svg?height=250&width=350" alt="Gallery Image 1">
+                <img src="/placeholder.svg?height=250&width=350" alt="Gallery Image 2">
+                <img src="/placeholder.svg?height=250&width=350" alt="Gallery Image 3">
+                <img src="/placeholder.svg?height=250&width=350" alt="Gallery Image 4">
+                <img src="/placeholder.svg?height=250&width=350" alt="Gallery Image 5">
+                <img src="/placeholder.svg?height=250&width=350" alt="Gallery Image 6">
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="section">
+            <h2>Contact Us</h2>
+            <p style="text-align: center; margin-bottom: 30px; color: #666;">
+                Get in touch with our team to learn more about our vehicles and services.
+            </p>
+            <div class="contact-form">
+                <input type="text" placeholder="Your Name">
+                <input type="email" placeholder="Your Email">
+                <textarea placeholder="Your Message"></textarea>
+                <button>Send Message</button>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer>
+            <p>&copy; 2024 Elite Car Series. All rights reserved.</p>
+        </footer>
+
+    </div> <!-- End main-content -->
+
+    <!-- Include Chatbot Widget -->
+    <div id="chatbot-widget" class="chatbot-widget">
+        <div id="chatbot-toggle" class="chatbot-toggle" onclick="toggleChatbot()">
+            <span class="chatbot-icon">🤖</span>
+            <span class="chatbot-text">Ask About Cars</span>
+        </div>
+        
+        <div id="chatbot-container" class="chatbot-container" style="display: none;">
+            <div class="chatbot-header">
+                <div class="chatbot-title">
+                    <span class="bot-avatar">🚗</span>
+                    <div>
+                        <h4>Automotive AI Assistant</h4>
+                        <p>Ask me anything about cars!</p>
+                    </div>
+                </div>
+                <button class="chatbot-close" onclick="toggleChatbot()">×</button>
+            </div>
+            
+            <div id="chatbot-messages" class="chatbot-messages">
+                <div class="bot-message">
+                    <div class="message-avatar">🤖</div>
+                    <div class="message-content">
+                        <p>Hello! I'm your automotive AI assistant. I can help you with:</p>
+                        <ul>
+                            <li>🏆 Elite Car Series information</li>
+                            <li>🔍 Any car make, model, or specifications</li>
+                            <li>🔧 Maintenance and repair advice</li>
+                            <li>💡 Car buying recommendations</li>
+                            <li>⚡ Electric vehicles and technology</li>
+                            <li>🏁 Performance and racing info</li>
+                            <li>📊 Car comparisons and reviews</li>
+                        </ul>
+                        <p>What would you like to know about cars?</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="chatbot-input-container">
+                <div class="quick-questions">
+                    <button class="quick-question-btn" onclick="askQuickQuestion('Tell me about the Elite GT')">Elite GT Info</button>
+                    <button class="quick-question-btn" onclick="askQuickQuestion('Compare Tesla Model S vs BMW i7')">Compare EVs</button>
+                    <button class="quick-question-btn" onclick="askQuickQuestion('Best family SUVs 2024')">Family SUVs</button>
+                    <button class="quick-question-btn" onclick="askQuickQuestion('How to maintain my car engine?')">Maintenance Tips</button>
+                </div>
+                <div class="chatbot-input-area">
+                    <input type="text" id="chatbot-input" placeholder="Ask about any car, maintenance, buying advice..." onkeypress="handleChatKeyPress(event)">
+                    <button id="chatbot-send" onclick="sendChatMessage()" disabled>
+                        <span class="send-icon">➤</span>
+                    </button>
+                </div>
+                <div class="chatbot-typing" id="chatbot-typing" style="display: none;">
+                    <div class="typing-indicator">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                    <span>AI is thinking...</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    
+    <!-- Firebase Config -->
+    <script src="js/firebase-config.js"></script>
+    
+    <!-- Dashboard JS -->
+    <script src="js/dashboard.js"></script>
+    
+    <!-- Email Service -->
+    <script src="js/email-service.js"></script>
+    
+    <!-- Test Drive Booking -->
+    <script src="js/test-drive-booking.js"></script>
 </body>
 </html>
